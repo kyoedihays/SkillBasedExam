@@ -1,0 +1,27 @@
+import socket
+
+def main():
+    host = "192.168.153.130"
+    port = 8080
+
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((host, port))
+
+    while True:
+        pressure_bar = input("Enter pressure in bar (type 'exit' to quit): ")
+
+        if pressure_bar.lower() == 'exit':
+            break
+
+        try:
+            pressure_bar = float(pressure_bar)
+            client_socket.send(str(pressure_bar).encode())
+            pressure_atm = client_socket.recv(1024).decode()
+            print("Pressure in atmosphere-standard:", pressure_atm)
+        except ValueError:
+            print("Invalid input. Please enter a valid pressure value.")
+
+    client_socket.close()
+
+if __name__ == "__main__":
+    main()
